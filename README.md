@@ -26,4 +26,4 @@ PICT-101 Comment "Correction du test négatifs" #Fixed
 dzd
 1 ticket
 
-test pas deploy
+test #deploy
