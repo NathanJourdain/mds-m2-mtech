@@ -13,6 +13,11 @@ final class CalculatorTest extends TestCase
         $this->assertSame(5, Calculator::add(2, 3));
     }
 
+    public function testSubtractionNotImplemented(): void
+    {
+        $this->assertSame(1, Calculator::subtract(3, 2));
+    }
+
     /*
     // Test volontairement erroné pour l'activité "Erreur et correction"
     public function testAdditionNegativeNumbers(): void

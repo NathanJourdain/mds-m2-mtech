@@ -9,4 +9,9 @@ final class Calculator
     {
         return $a + $b;
     }
+
+    public static function subtract(int $a, int $b): int
+    {
+        throw new \RuntimeException('Not implemented yet');
+    }
 }
