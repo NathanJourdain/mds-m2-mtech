@@ -22,6 +22,6 @@ $this->assertSame(-5, Calculator::add(-2, -3));
 3) Committez et poussez avec un message lié à votre ticket YouTrack, par ex. :
 ```
 PICT-101 Comment "Correction du test négatifs" #Fixed
-```
+```eaff
 dzdz
 Update ticket MMM-1 ticket. fae
