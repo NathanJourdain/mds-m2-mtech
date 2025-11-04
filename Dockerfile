@@ -1,20 +1,19 @@
+FROM composer:2.8.12 as composer
+
+WORKDIR /app
+COPY composer.json ./
+RUN composer install --no-interaction --no-dev --optimize-autoloader
+
 FROM php:8.2-apache AS build
 
 WORKDIR /var/www/html
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-RUN apt-get update && apt-get install -y git unzip zip && rm -rf /var/lib/apt/lists/*
-
-COPY composer.json composer.lock* ./
-
-RUN composer install --prefer-dist --no-progress --no-interaction
-
 COPY . .
+COPY --from=composer /app/vendor ./vendor
 
-# Test stage
-FROM build AS test
 
-RUN composer install --dev && vendor/bin/phpunit --testdox --no-interaction || (echo "Tests failed" && exit 1)
-
-EXPOSE 80
+FROM composer:2.8.12 AS test
+WORKDIR /app
+COPY composer.json ./
+RUN composer install --no-interaction --optimize-autoloader
+COPY . .
+RUN ./vendor/bin/phpunit --configuration phpunit.xml
