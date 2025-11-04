@@ -26,7 +26,9 @@ jobs:
       run: docker build --target test . --tag nathan-thomas-mael:test
 
     - name: Build the Docker image
-      run: docker build --target build . --tag nathan-thomas-mael:$(date +%s)
+      run: |
+        IMAGE_TAG=${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/nathan-thomas-mael:$(date +%s)
+        docker build --target build . --tag $IMAGE_TAG
 
     - name: Push the Docker Image
-      run: docker push nathan-thomas-mael:$(date +%s)
+      run: docker push $IMAGE_TAG
