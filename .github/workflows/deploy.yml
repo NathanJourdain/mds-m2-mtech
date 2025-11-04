@@ -1,0 +1,29 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Login to Scaleway Container Registry
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.SCALEWAY_ID }}
+        password: ${{ secrets.SCALEWAY_SECRET_KEY }}
+        registry: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag nathan-thomas-mael:$(date +%s)
+
+    - name: Push the Docker Image
+      run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/nathan-thomas-mael:$(date +%s)
