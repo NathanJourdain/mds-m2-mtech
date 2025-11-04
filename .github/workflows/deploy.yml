@@ -19,11 +19,14 @@ jobs:
       uses: docker/login-action@v3
       with:
         username: nologin
-        password: ${{ secrets.SCALEWAY_SECRET_KEY }}
+        password: ${{ secrets.SCALEWAY_ID }}
         registry: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
 
+    - name: Test the Docker image build
+      run: docker build --target test . --tag nathan-thomas-mael:test
+
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag nathan-thomas-mael:$(date +%s)
+      run: docker build --target build . --tag nathan-thomas-mael:$(date +%s)
 
     - name: Push the Docker Image
       run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/nathan-thomas-mael:$(date +%s)
