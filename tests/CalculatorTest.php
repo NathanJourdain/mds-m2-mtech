@@ -19,3 +19,4 @@ final class CalculatorTest extends TestCase
         $this->assertSame(-5, Calculator::add(-2, -3)); // échouera (résultat attendu: -5)
     }
 }
+
