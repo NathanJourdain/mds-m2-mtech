@@ -8,13 +8,10 @@ on:
 
 jobs:
 
-  build:
-
+  build-test:
     runs-on: ubuntu-latest
-
     env:
       IMAGE_TAG: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/nathan-thomas-mael:${{ github.run_id }}
-
     steps:
     - uses: actions/checkout@v4
 
@@ -31,10 +28,24 @@ jobs:
     - name: Build the Docker image
       run: docker build --target build . --tag $IMAGE_TAG
 
-    - name: Push the Docker Image
-      if: contains(github.event.head_commit.message, '#deploy')
-      run: docker push $IMAGE_TAG
+  deploy:
+    needs: build-test
+    if: contains(github.event.head_commit.message, '#deploy')
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/nathan-thomas-mael:${{ github.run_id }}
+    steps:
+    - uses: actions/checkout@v4
 
+    - name: Login to Scaleway Container Registry
+      uses: docker/login-action@v3
+      with:
+        username: nologin
+        password: ${{ secrets.SCALEWAY_SECRET_KEY }}
+        registry: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
+
+    - name: Push the Docker Image
+      run: docker push $IMAGE_TAG
 
     - name: Notify on failure
       uses: rtCamp/action-slack-notify@v2
